@@ -10,8 +10,10 @@ import com.driver.repository.TrainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -120,9 +122,12 @@ public class TrainService {
             if(train.getRoute().contains(station.name())){
 
                 LocalTime departureTime = train.getDepartureTime();
-                LocalTime arrivalTime = departureTime.plusHours(train.getRoute().split(",").length - 1);
 
-                if (departureTime.isAfter(startTime) && arrivalTime.isBefore(endTime)) {
+                List<String> routeArr = Arrays.asList(train.getRoute().split(","));
+
+                LocalTime arrivalTime = departureTime.plusHours(routeArr.indexOf(station.name()));
+
+                if (arrivalTime.isAfter(startTime) && arrivalTime.isBefore(endTime)) {
                     runningTrains.add(train.getTrainId());
                 }
 
